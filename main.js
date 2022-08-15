@@ -14,18 +14,18 @@ app.use(ntlm({
         var args = Array.prototype.slice.apply(arguments);
         console.log.apply(null, args);
     },
-    domain: 'rb.local',
-    domaincontroller: 'ldap://mo4-dc-01',
+    domain: process.env.domain,
+    domaincontroller: process.env.domaincontroller,
 
     // use different port (default: 389)
     // domaincontroller: 'ldap://myad.example:3899',
 }));
 
-function parseCookies (request) {
+function parseCookies(request) {
     var list = {},
         rc = request.headers.cookie;
 
-    rc && rc.split(';').forEach(function( cookie ) {
+    rc && rc.split(';').forEach(function(cookie) {
         var parts = cookie.split('=');
         list[parts.shift().trim()] = decodeURI(parts.join('='));
     });
@@ -42,20 +42,19 @@ app.all('*', function(request, response) {
     console.log("222");
 
     console.log(asd);
-    if (request.ntlm == null) 
-    {
+    if (request.ntlm == null) {
         console.log("null");
     }
 
     response.cookie('user', asd.UserName);
-   
+
     var cookies = parseCookies(request);
     console.log(cookies);
     //response.redirect('http://localhost:8082/');
     // response.end(JSON.stringify(request.ntlm)); 
     // {"DomainName":"MYDOMAIN","UserName":"MYUSER","Workstation":"MYWORKSTATION"}
     // response.sendFile(`${__dirname}/public/index.html`);
-    response.render('index', { title: 'Портал МО-4', message: 'Добро пожаловать ' + asd.UserName});
+    response.render('index', { title: 'Портал МО-4', message: 'Добро пожаловать ' + asd.UserName });
 });
 
-app.listen(3000);
+app.listen(3005);
